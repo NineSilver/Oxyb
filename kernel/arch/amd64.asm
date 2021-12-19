@@ -16,6 +16,11 @@ gdt_reload:
 	push rdi
 	retfq
 
+global idt_reload
+idt_reload:
+    lidt [rdi]
+    ret
+
 global __hlt
 __hlt:
     hlt

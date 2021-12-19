@@ -6,7 +6,7 @@
 /* Descriptors */
 
 void gdt_reload(uint64_t descriptor);
-
+void idt_reload(uint64_t descriptor);
 
 /* Port IO */
 

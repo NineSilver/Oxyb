@@ -5,32 +5,27 @@
 #include <log.h>
 #include <string.h>
 
-static  putchar_fn_t __internal_putchar_fn = 0;
+static putchar_fn_t __internal_putchar_fn = 0;
 
 void init_logging(putchar_fn_t log_fn)
 {
     __internal_putchar_fn = log_fn;
 }
 
-void putchar(const char c)
+void kputchar(const char c)
 {
     __internal_putchar_fn(c);
 }
 
-void putstr(const char* s)
+void kputstr(const char* s)
 {
     size_t i;
     for(i = 0; s[i]; i++)
-    {
-        putchar(s[i]);
-    }
+        kputchar(s[i]);
 }
 
-void printf(const char* format,...)
+static void kprint(const char* format, va_list args)
 {
-    va_list args;
-    va_start(args, format);
-
     const char* i = format;
 
     while(*i)
@@ -42,7 +37,7 @@ void printf(const char* format,...)
             switch(*i)
             {
                 case 'c':
-                    putchar((char)va_arg(args, int));
+                    kputchar((char)va_arg(args, int));
                     break;
 
                 case 'd':
@@ -52,9 +47,9 @@ void printf(const char* format,...)
                     if(num < 0)
                     {
                         num = -num;
-                        putchar('-');
+                        kputchar('-');
                     }
-                    putstr(itoa(num, 10));
+                    kputstr(itoa(num, 10));
                     break;
                 }
 
@@ -64,37 +59,67 @@ void printf(const char* format,...)
                     if(num < 0)
                     {
                         num = -num;
-                        putchar('-');
+                        kputchar('-');
                     }
-                    putstr(itoa(num, 10));
+                    kputstr(itoa(num, 10));
                     break;
                 }
 
                 case 's':
-                    putstr(va_arg(args, const char*));
+                    kputstr(va_arg(args, const char*));
                     break;
 
                 case 'x':
-                    putstr("0x");
-                    putstr(itoa(va_arg(args, unsigned int), 16));
+                    kputstr("0x");
+                    kputstr(itoa(va_arg(args, unsigned int), 16));
                     break;
 
                 case '%':
-                    putchar('%');
+                    kputchar('%');
                     break;
 
                 default:
-                    putchar('?');
+                    kputchar('?');
                     break;
             }
         }
         else
         {
-            putchar(*i);
+            kputchar(*i);
         }
 
         i++;
     }
+}
 
+void klog(int loglevel, const char* message, ...)
+{
+    switch(loglevel)
+    {
+        case LOG_INFO:
+            kputstr("[" "\033[94m" "INFO" "\033[97m" "] ");
+            break;
+
+        case LOG_WARN:
+            kputstr("[" "\033[93m" "WARN" "\033[97m" "] ");
+            break;
+
+        case LOG_ERROR:
+            kputstr("[" "\033[31m" "ERROR" "\033[97m" "] ");
+            break;
+
+        case LOG_DONE:
+            kputstr("[" "\033[92m" "DONE" "\033[97m" "] ");
+            break;
+        
+        case LOG_NOPREFIX:
+            break;
+    }
+
+    va_list args;
+    va_start(args, message);
+
+    kprint(message, args);
+    
     va_end(args);
 }

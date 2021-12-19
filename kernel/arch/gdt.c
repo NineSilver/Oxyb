@@ -1,3 +1,5 @@
+#include <log.h>
+
 #include "amd64.h"
 #include "gdt.h"
 
@@ -45,4 +47,6 @@ void init_gdt()
 	gdtr.offset = (uint64_t)&gdt;
 
 	gdt_reload((uint64_t)&gdtr);
+
+	klog(LOG_DONE, "Loaded Global Descriptor Table\n");
 }
