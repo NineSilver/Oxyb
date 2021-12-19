@@ -12,7 +12,7 @@ cp thirdparty/limine/limine.sys              image/boot
 cp thirdparty/limine/limine-cd.bin           image/boot
 cp thirdparty/limine/limine-eltorito-efi.bin image/boot
 cp kernel/oxyb.elf                           image/boot
-echo "TIMEOUT=5"                          > image/boot/limine.cfg
+echo "TIMEOUT=0"                          > image/boot/limine.cfg
 echo "GRAPHICS=yes"                      >> image/boot/limine.cfg
 echo ":Oxyb"                             >> image/boot/limine.cfg
 echo "PROTOCOL=stivale2"                 >> image/boot/limine.cfg
