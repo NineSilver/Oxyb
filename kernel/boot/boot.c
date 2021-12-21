@@ -8,15 +8,11 @@ void* stivale2_get_tag(struct stivale2_struct* info, uint64_t id)
     for(;;)
     {
         if(!tag)
-        {
             return NULL;
-        }
 
         if(tag->identifier == id)
-        {
             return tag;
-        }
-
+            
         tag = (void*)tag->next;
     }
 }
