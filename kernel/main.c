@@ -5,6 +5,7 @@
 #include "arch/interrupts.h"
 #include "arch/serial.h"
 #include "boot/boot.h"
+#include "mem/mm.h"
 
 void kmain(struct stivale2_struct* info)
 {
@@ -16,6 +17,8 @@ void kmain(struct stivale2_struct* info)
     
     init_gdt();
     init_idt();
+
+    init_pmm(stivale2_get_tag(info, STIVALE2_STRUCT_TAG_MEMMAP_ID));
 
     klog(LOG_INFO, "End of kmain()\n");
 

@@ -41,9 +41,8 @@ static void kprint(const char* format, va_list args)
                     break;
 
                 case 'd':
-                case 'i':
                 {
-                    int num = va_arg(args, int);
+                    int32_t num = va_arg(args, int64_t);
                     if(num < 0)
                     {
                         num = -num;
@@ -53,17 +52,9 @@ static void kprint(const char* format, va_list args)
                     break;
                 }
 
-                case 'l':
-                {
-                    long num = va_arg(args, long);
-                    if(num < 0)
-                    {
-                        num = -num;
-                        kputchar('-');
-                    }
-                    kputstr(itoa(num, 10));
+                case 'u':
+                    kputstr(itoa(va_arg(args, uint64_t), 10));
                     break;
-                }
 
                 case 's':
                     kputstr(va_arg(args, const char*));
@@ -71,9 +62,9 @@ static void kprint(const char* format, va_list args)
 
                 case 'x':
                     kputstr("0x");
-                    kputstr(itoa(va_arg(args, unsigned int), 16));
+                    kputstr(itoa(va_arg(args, uint64_t), 16));
                     break;
-
+                    
                 case '%':
                     kputchar('%');
                     break;
