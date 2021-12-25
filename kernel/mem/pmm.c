@@ -22,6 +22,7 @@ void init_pmm(struct stivale2_struct_tag_memmap* memmap)
     {
         if(memmap->memmap[i].type != STIVALE2_MMAP_USABLE
             && memmap->memmap[i].type != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE
+            && memmap->memmap[i].type != STIVALE2_MMAP_ACPI_RECLAIMABLE
             && memmap->memmap[i].type != STIVALE2_MMAP_KERNEL_AND_MODULES)
             continue;
 
@@ -62,15 +63,6 @@ void init_pmm(struct stivale2_struct_tag_memmap* memmap)
             BIT_CLEAR(bitmap, (memmap->memmap[i].base + j) / PAGE_SIZE);
     }
 
-    for(i = 0; i < memmap->entries; i++)
-    {
-        if(memmap->memmap[i].type != STIVALE2_MMAP_BOOTLOADER_RECLAIMABLE
-            || memmap->memmap[i].type != STIVALE2_MMAP_ACPI_RECLAIMABLE)
-            continue;
-
-        pmm_free((void*)memmap->memmap[i].base, memmap->memmap[i].length / PAGE_SIZE);
-        klog(LOG_INFO, "pmm: Reclaimed %U pages at %X\n", memmap->memmap[i].length / PAGE_SIZE, memmap->memmap[i].base);
-    }
     klog(LOG_DONE, "pmm: bitmap initialized\n");
 }
 
