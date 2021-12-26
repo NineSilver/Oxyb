@@ -21,6 +21,11 @@ idt_reload:
     lidt [rdi]
     ret
 
+global write_cr3
+write_cr3:
+    mov cr3, rdi
+    ret
+
 global __hlt
 __hlt:
     hlt

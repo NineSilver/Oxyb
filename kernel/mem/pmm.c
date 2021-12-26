@@ -10,7 +10,7 @@
 #define BIT_CLEAR(b, i) ((b)[(i) / 8] &= ~(1 << ((i) % 8)))
 #define BIT_TEST(b, i) ((b)[(i) / 8] & (1 << ((i) % 8)))
 
-static uint8_t* bitmap;
+static uint8_t* bitmap = 0;
 static uint64_t highest_page = 0;
 
 void init_pmm(struct stivale2_struct_tag_memmap* memmap)
@@ -66,23 +66,33 @@ void init_pmm(struct stivale2_struct_tag_memmap* memmap)
     klog(LOG_DONE, "pmm: bitmap initialized\n");
 }
 
+static void set_pages(void* addr, size_t pages)
+{
+    size_t i;
+    for(i = 0; i < pages; i++)
+        BIT_SET(bitmap, ((size_t)addr / PAGE_SIZE) + i);
+}
+
+static void clear_page(void* addr)
+{
+    BIT_CLEAR(bitmap, (size_t)addr / PAGE_SIZE);
+}
+
 void* pmm_malloc(size_t pages)
 {
-    size_t i, j, k;
+    size_t i, j;
     for(i = 0; i < highest_page / PAGE_SIZE; i++)
     {
-        for(j = 0;; j++)
+        for(j = 0; j < pages; j++)
         {
             if(BIT_TEST(bitmap, i))
-                break;
-
-            if(j == pages)
             {
-                void* ret = (void*)(i * PAGE_SIZE);
-                for(k = i; k <= j; k++)
-                    BIT_SET(bitmap, k);
-
-                return ret;
+                break;
+            }
+            else if(j == (pages - 1))
+            {
+                set_pages((void*)(i * PAGE_SIZE), pages);
+                return (void*)(i * PAGE_SIZE);
             }
         }
     }
@@ -92,13 +102,15 @@ void* pmm_malloc(size_t pages)
 
 void* pmm_calloc(size_t pages)
 {
-    return (memset(pmm_malloc(pages) + MEM_PHYS_OFFSET, 0, pages * PAGE_SIZE) - MEM_PHYS_OFFSET);
+    void* new = pmm_malloc(pages);
+    memset((void*)((size_t)new + MEM_PHYS_OFFSET), 0, pages * PAGE_SIZE);
+    return new;
 }
 
 void* pmm_realloc(void* addr, size_t new_pages, size_t old_pages)
 {
     void* new = pmm_malloc(new_pages);
-    memcpy(new + MEM_PHYS_OFFSET, addr + MEM_PHYS_OFFSET, old_pages * PAGE_SIZE);
+    memcpy((void*)((size_t)new + MEM_PHYS_OFFSET), (void*)((size_t)addr + MEM_PHYS_OFFSET), old_pages / PAGE_SIZE);
     pmm_free(addr, old_pages);
     return new;
 }
@@ -107,5 +119,5 @@ void pmm_free(void* addr, size_t pages)
 {
     size_t i;
     for(i = 0; i < pages; i++)
-        BIT_CLEAR(bitmap, ((uint64_t)addr / PAGE_SIZE) + i);
+        clear_page((void*)((size_t)addr + (i * PAGE_SIZE)));
 }

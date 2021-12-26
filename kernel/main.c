@@ -19,6 +19,7 @@ void kmain(struct stivale2_struct* info)
     init_idt();
 
     init_pmm(stivale2_get_tag(info, STIVALE2_STRUCT_TAG_MEMMAP_ID));
+    init_vmm();
 
     klog(LOG_INFO, "End of kmain()\n");
 
