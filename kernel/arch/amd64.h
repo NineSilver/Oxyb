@@ -22,6 +22,7 @@ void outd(uint16_t port, uint32_t data);
 
 /* Control registers */
 
+uint64_t read_cr2();
 void write_cr3(uint64_t value);
 
 /* Misc */
