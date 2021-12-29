@@ -1,3 +1,5 @@
+#!/bin/sh
+
 rm -rf $(find . -name "*.o") *.elf
 
 for f in $(find . -name "*.c"); do

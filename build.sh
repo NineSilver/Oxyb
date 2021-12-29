@@ -1,3 +1,5 @@
+#!/bin/sh
+
 rm -rf thirdparty/limine
 git clone --depth 1 --branch=v2.0-binary https://github.com/limine-bootloader/limine thirdparty/limine
 rm -rf image
