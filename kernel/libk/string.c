@@ -40,3 +40,18 @@ void* memcpy(void* dest, const void* src, size_t len)
         
     return dest;
 }
+
+int strncmp(const char* s1, const char* s2, size_t n)
+{
+    while(n - 1)
+    {
+        if(*s1 != *s2)
+            break;
+        
+        s1++;
+        s2++;
+        n--;
+    }
+    return (int)(*s1 - *s2);
+}
+

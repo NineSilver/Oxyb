@@ -1,5 +1,6 @@
 #include <log.h>
 
+#include "acpi/acpi.h"
 #include "arch/amd64.h"
 #include "arch/gdt.h"
 #include "arch/interrupts.h"
@@ -9,7 +10,8 @@
 
 void kmain(struct stivale2_struct* info)
 {
-    (void)info;
+    info = (void*)info + MEM_PHYS_OFFSET;
+
     init_serial(0x3f8);
     init_logging(&serial_putc);
 
@@ -20,6 +22,8 @@ void kmain(struct stivale2_struct* info)
 
     init_pmm(stivale2_get_tag(info, STIVALE2_STRUCT_TAG_MEMMAP_ID));
     init_vmm();
+
+    init_acpi(stivale2_get_tag(info, STIVALE2_STRUCT_TAG_RSDP_ID));
 
     klog(LOG_INFO, "End of kmain()\n");
 

@@ -33,4 +33,4 @@ xorriso \
 
 thirdparty/limine/limine-install-linux-x86_64 oxyb.iso
 
-qemu-system-x86_64 -m 256M -machine q35 -no-reboot -no-shutdown -serial stdio -hda oxyb.iso
+qemu-system-x86_64 -m 256M -smp 4 -machine q35 -no-reboot -no-shutdown -serial stdio -hda oxyb.iso
