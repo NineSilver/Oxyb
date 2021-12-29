@@ -75,7 +75,11 @@ static void raise_exception(struct stack_frame* stackframe)
     klog(LOG_NOPREFIX, "  RAX=%x RBX=%x RCX=%x RDX=%x\n", stackframe->rax, stackframe->rbx, stackframe->rcx, stackframe->rdx);
     klog(LOG_NOPREFIX, "  RDI=%x RSI=%x RBP=%x RSP=%x\n", stackframe->rdi, stackframe->rsi, stackframe->rbp, stackframe->rsp);
     klog(LOG_NOPREFIX, "  R8=%x  R9=%x  R10=%x R11=%x\n", stackframe->r8,  stackframe->r9,  stackframe->r10, stackframe->r11);
-    klog(LOG_NOPREFIX, "  R12=%x R13=%x R14=%x R15=%x\n", stackframe->r12, stackframe->r13, stackframe->r14, stackframe->r15);
+    klog(LOG_NOPREFIX, "  R12=%x R13=%x R14=%x R15=%x\n\n", stackframe->r12, stackframe->r13, stackframe->r14, stackframe->r15);
+
+    if(stackframe->isr_num == 0xE)
+        klog(LOG_NOPREFIX, "  Faulty address: CR2=%x\n\n", read_cr2());
+    
     klog(LOG_NOPREFIX, "  At RIP=%x\n\n", stackframe->rip);
     klog(LOG_NOPREFIX, "==== System halted - Kernel panic ====\n");
 }
