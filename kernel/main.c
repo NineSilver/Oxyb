@@ -1,12 +1,12 @@
 #include <log.h>
 
-#include "acpi/acpi.h"
 #include "arch/amd64.h"
 #include "arch/gdt.h"
 #include "arch/interrupts.h"
 #include "arch/serial.h"
 #include "boot/boot.h"
 #include "mem/mm.h"
+#include "sys/acpi.h"
 
 void kmain(struct stivale2_struct* info)
 {
