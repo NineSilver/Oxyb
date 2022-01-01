@@ -62,26 +62,20 @@ void init_acpi(struct stivale2_struct_tag_rsdp* rsdp_tag)
 
     if(!rsdt)
     {
-        klog(LOG_ERROR, "ACPI: RSDT not found. Halting.\n");
-        __cli();
-        __hlt();
+        panic("ACPI: RSDT not found. Halting.\n");
     }
 
     fadt = acpi_search_table("FACP", 0);
     madt = acpi_search_table("APIC", 0);
     if(!madt)
     {
-        klog(LOG_ERROR, "ACPI: MADT not found. Halting.\n");
-        __cli();
-        __hlt();
+        panic("ACPI: MADT not found. Halting.\n");
     }
     
     mcfg = acpi_search_table("MCFG", 0);
     if(!mcfg)
     {
-        klog(LOG_ERROR, "ACPI: MCFG not found. Halting.\n");
-        __cli();
-        __hlt();
+        panic("ACPI: MCFG not found. Halting.\n");
     }
 
     klog(LOG_INFO, "ACPI: RSDT at %x | FADT at %x | MADT at %x | MCFG at %x\n", (xsdt_present ? (uint64_t)xsdt : (uint64_t)rsdt), fadt, madt, mcfg);

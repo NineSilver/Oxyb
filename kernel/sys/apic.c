@@ -83,9 +83,7 @@ static void ioapic_set_redirect(uint8_t id, uint32_t gsi, uint8_t vec, uint16_t 
     madt_ioapic_t* ioapic = get_ioapic_by_gsi(gsi);
     if(!ioapic)
     {
-        klog(LOG_ERROR, "apic: no I/O APIC matching GSI %u found\n", gsi);
-        __cli();
-        for(;;) __hlt();
+        panic("apic: no I/O APIC matching GSI %u found. Halting.\n", gsi);
     }
     
     uint64_t redirect = vec;
