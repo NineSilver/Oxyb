@@ -92,7 +92,7 @@ extern uint64_t isr_handler(uint64_t rsp)
     {
         raise_exception(stackframe);
         __cli();
-        __hlt();
+        for(;;) __hlt();
     }
     else if(stackframe->isr_num > 31 && stackframe->isr_num < 49)
     {
