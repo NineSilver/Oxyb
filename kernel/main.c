@@ -1,4 +1,5 @@
 #include <log.h>
+#include <misc.h>
 
 #include "arch/amd64.h"
 #include "arch/gdt.h"
@@ -31,9 +32,5 @@ void kmain(struct stivale2_struct* info)
 
     klog(LOG_INFO, "End of kmain()\n");
 
-    for(;;)
-    {
-        __cli();
-    	__hlt();
-	}
+    halt();
 }

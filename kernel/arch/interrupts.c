@@ -1,4 +1,5 @@
 #include <log.h>
+#include <misc.h>
 
 #include "../sys/apic.h"
 #include "amd64.h"
@@ -91,8 +92,7 @@ extern uint64_t isr_handler(uint64_t rsp)
     if(stackframe->isr_num < 32)
     {
         raise_exception(stackframe);
-        __cli();
-        for(;;) __hlt();
+        halt();
     }
     else if(stackframe->isr_num > 31 && stackframe->isr_num < 49)
     {
