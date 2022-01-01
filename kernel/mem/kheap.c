@@ -14,7 +14,7 @@ void* kalloc(size_t size)
     if(!ptr) return NULL;
 
     ptr += MEM_PHYS_OFFSET;
-    struct slab* this = ptr;
+    struct chunk_header* this = ptr;
     ptr += PAGE_SIZE;
 
     this->pages = pages;
@@ -33,7 +33,7 @@ void* krealloc(void* ptr, size_t size)
         return (void*)0;
     }
 
-    struct slab* this = (struct slab*)((size_t)ptr - PAGE_SIZE);
+    struct chunk_header* this = (struct chunk_header*)((size_t)ptr - PAGE_SIZE);
     if((this->size + PAGE_SIZE - 1) / PAGE_SIZE
          == (size + PAGE_SIZE - 1) / PAGE_SIZE)
     {
@@ -55,6 +55,6 @@ void* krealloc(void* ptr, size_t size)
 
 void kfree(void* ptr)
 {
-    struct slab* this = (struct slab*)((size_t)ptr - PAGE_SIZE);
+    struct chunk_header* this = (struct chunk_header*)((size_t)ptr - PAGE_SIZE);
     pmm_free((void*)((size_t)this - MEM_PHYS_OFFSET), this->pages + 1);
 }

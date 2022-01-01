@@ -36,7 +36,7 @@ void vmm_unmap_page(struct vmm_pagemap* pagemap, uint64_t virtual);
 
 /* Kernel heap */
 
-struct slab
+struct chunk_header
 {
     size_t pages;
     size_t size;
