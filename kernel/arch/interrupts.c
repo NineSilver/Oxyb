@@ -1,5 +1,6 @@
 #include <log.h>
 
+#include "../sys/apic.h"
 #include "amd64.h"
 #include "interrupts.h"
 
@@ -104,6 +105,7 @@ extern uint64_t isr_handler(uint64_t rsp)
         outb(0xA0, 0x20);
     
     outb(0x20, 0x20);
+    lapic_eoi();
 
     return rsp;
 }

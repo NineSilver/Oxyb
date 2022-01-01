@@ -48,75 +48,75 @@ typedef struct xsdt
 
 typedef struct madt
 {
-  sdt_t header;
-  uint32_t local_controller_address;
-  uint32_t flags;
-  uint8_t entries[0];
+    sdt_t header;
+    uint32_t local_controller_address;
+    uint32_t flags;
+    uint8_t entries[0];
 } __attribute__((packed)) madt_t;
 
 typedef struct madt_header
 {
-  uint8_t id;
-  uint8_t length;
+    uint8_t id;
+    uint8_t length;
 } __attribute__((packed)) madt_header_t;
 
 typedef struct madt_lapic
 {
-  madt_header_t header;
-  uint8_t proc_id;
-  uint8_t apic_id;
-  uint32_t flags;
+    madt_header_t header;
+    uint8_t proc_id;
+    uint8_t apic_id;
+    uint32_t flags;
 } __attribute__((packed)) madt_lapic_t;
 
 typedef struct madt_ioapic
 {
-  madt_header_t header;
-  uint8_t apic_id;
-  uint8_t reserved;
-  uint32_t addr;
-  uint32_t gsi;
+    madt_header_t header;
+    uint8_t apic_id;
+    uint8_t reserved;
+    uint32_t addr;
+    uint32_t gsi;
 } __attribute__((packed)) madt_ioapic_t;
 
 typedef struct madt_iso
 {
-  madt_header_t header;
-  uint8_t bus_src;
-  uint8_t irq_src;
-  uint16_t flags;
-  uint32_t gsi;
+    madt_header_t header;
+    uint8_t bus_src;
+    uint8_t irq_src;
+    uint32_t gsi;
+    uint16_t flags;
 } __attribute__((packed)) madt_iso_t;
 
 typedef struct madt_nmi
 {
-  madt_header_t header;
-  uint8_t processor;
-  uint8_t lint;
-  uint16_t flags;
+    madt_header_t header;
+    uint8_t processor;
+    uint16_t flags;
+    uint8_t lint;
 } __attribute__((packed)) madt_nmi_t;
 
 typedef struct mcfg_entry
 {
-  uint64_t base_addr;
-  uint16_t seg_grp;
-  uint8_t sbus;
-  uint8_t ebus;
-  uint32_t reserved;
+    uint64_t base_addr;
+    uint16_t seg_grp;
+    uint8_t sbus;
+    uint8_t ebus;
+    uint32_t reserved;
 } __attribute__((packed)) mcfg_entry_t;
 
-typedef struct _mcfg
+typedef struct mcfg
 {
-  sdt_t header;
-  uint64_t reserved;
-  mcfg_entry_t entries[];
+    sdt_t header;
+    uint64_t reserved;
+    mcfg_entry_t entries[];
 } __attribute__((packed)) mcfg_t;
 
 typedef struct generic_address
 {
-  uint8_t addr_space;
-  uint8_t bit_width;
-  uint8_t bit_offset;
-  uint8_t access_size;
-  uint64_t address;
+    uint8_t addr_space;
+    uint8_t bit_width;
+    uint8_t bit_offset;
+    uint8_t access_size;
+    uint64_t address;
 } generic_address_t;
 
 typedef struct fadt
@@ -185,5 +185,6 @@ typedef struct fadt
 
 void init_acpi(struct stivale2_struct_tag_rsdp* rsdp_tag);
 void* acpi_search_table(char* signature, size_t index);
+madt_t* get_madt();
 
 #endif /* !__OXYB__AMD64__ACPI_H */

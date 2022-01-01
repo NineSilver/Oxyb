@@ -7,6 +7,7 @@
 #include "boot/boot.h"
 #include "mem/mm.h"
 #include "sys/acpi.h"
+#include "sys/apic.h"
 #include "sys/pit.h"
 
 void kmain(struct stivale2_struct* info)
@@ -26,6 +27,7 @@ void kmain(struct stivale2_struct* info)
 
     init_acpi(stivale2_get_tag(info, STIVALE2_STRUCT_TAG_RSDP_ID));
     init_pit(1000);
+    init_apic();
 
     klog(LOG_INFO, "End of kmain()\n");
 

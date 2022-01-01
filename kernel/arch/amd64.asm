@@ -31,6 +31,14 @@ write_cr3:
     mov cr3, rdi
     ret
 
+global read_msr
+read_msr:
+    mov rcx, rdi
+    rdmsr
+    shl rdx, 32
+    or rax, rdx
+    ret
+
 global outb
 outb:
     mov rax, rsi

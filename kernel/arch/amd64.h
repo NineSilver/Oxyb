@@ -25,6 +25,12 @@ void outd(uint16_t port, uint32_t data);
 uint64_t read_cr2();
 void write_cr3(uint64_t value);
 
+
+/* Model-specific registers */
+
+uint64_t read_msr(uint32_t msr);
+
+
 /* Misc */
 
 void __hlt();

@@ -46,6 +46,11 @@ void* acpi_search_table(char* signature, size_t index)
     return NULL;
 }
 
+madt_t* get_madt()
+{
+    return madt;
+}
+
 void init_acpi(struct stivale2_struct_tag_rsdp* rsdp_tag)
 {
     rsdp = (rsdp_t*)(rsdp_tag->rsdp + MEM_PHYS_OFFSET);

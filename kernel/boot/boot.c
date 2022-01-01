@@ -3,7 +3,7 @@
 #include "../mem/mm.h"
 #include "boot.h"
 
-static uint8_t stack[4096];
+static uint8_t stack[8192];
 
 static struct stivale2_header_tag_framebuffer framebuffer_request = {
     .tag = {
