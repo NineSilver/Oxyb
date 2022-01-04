@@ -1,4 +1,4 @@
-#include "amd64.h"
+#include "../arch/amd64.h"
 #include "serial.h"
 
 static uint16_t _port;

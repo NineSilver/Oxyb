@@ -4,12 +4,12 @@
 #include "arch/amd64.h"
 #include "arch/gdt.h"
 #include "arch/interrupts.h"
-#include "arch/serial.h"
 #include "boot/boot.h"
 #include "mem/mm.h"
 #include "sys/acpi.h"
 #include "sys/apic.h"
 #include "sys/pit.h"
+#include "sys/serial.h"
 
 void kmain(struct stivale2_struct* info)
 {
