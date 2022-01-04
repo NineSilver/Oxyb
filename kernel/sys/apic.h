@@ -1,5 +1,5 @@
-#ifndef __OXYB__SYS__ACPI_H
-#define __OXYB__SYS__ACPI_H
+#ifndef __OXYB__SYS__APIC_H
+#define __OXYB__SYS__APIC_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -24,4 +24,4 @@ uint8_t lapic_get_id();
 void lapic_send_ipi(uint8_t id, uint8_t vec);
 void init_apic();
 
-#endif /* !_OXYB__SYS__ACPI_H */
+#endif /* !_OXYB__SYS__APIC_H */

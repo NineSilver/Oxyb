@@ -1,5 +1,5 @@
-#ifndef __OXYB__ACPI__ACPI_H
-#define __OXYB__ACPI__ACPI_H
+#ifndef __OXYB__SYS__ACPI_H
+#define __OXYB__SYS__ACPI_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -187,4 +187,4 @@ void init_acpi(struct stivale2_struct_tag_rsdp* rsdp_tag);
 void* acpi_search_table(char* signature, size_t index);
 madt_t* get_madt();
 
-#endif /* !__OXYB__AMD64__ACPI_H */
+#endif /* !__OXYB__SYS__ACPI_H */
