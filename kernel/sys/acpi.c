@@ -51,6 +51,11 @@ madt_t* get_madt()
     return madt;
 }
 
+mcfg_t* get_mcfg()
+{
+    return mcfg;
+}
+
 void init_acpi(struct stivale2_struct_tag_rsdp* rsdp_tag)
 {
     rsdp = (rsdp_t*)(rsdp_tag->rsdp + MEM_PHYS_OFFSET);

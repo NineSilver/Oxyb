@@ -186,5 +186,6 @@ typedef struct fadt
 void init_acpi(struct stivale2_struct_tag_rsdp* rsdp_tag);
 void* acpi_search_table(char* signature, size_t index);
 madt_t* get_madt();
+mcfg_t* get_mcfg();
 
 #endif /* !__OXYB__SYS__ACPI_H */
