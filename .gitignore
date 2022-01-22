@@ -1,6 +1,7 @@
 *.iso
 *.o
 *.elf
+*.bin
 image
 thirdparty
 

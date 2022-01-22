@@ -3,11 +3,16 @@
 
 #include <stddef.h>
 
+#include <mutex.h>
+
 #include "../boot/stivale2.h"
 
 #define PAGE_SIZE ((size_t)4096)
 #define MEM_PHYS_OFFSET ((uint64_t)0xffff800000000000)
 #define MEM_KERN_OFFSET ((uint64_t)0xffffffff80000000)
+
+#define ALIGN_UP(n) (((n) + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1))
+#define ALIGN_DOWN(n) ((n) & ~(PAGE_SIZE - 1))
 
 
 /* PMM */
@@ -25,9 +30,11 @@ void pmm_free(void* addr, size_t pages);
 struct vmm_pagemap
 {
     uint64_t* pml4;
+    mutex_t mutex;
 };
 
 void init_vmm();
+struct vmm_pagemap* vmm_kernel_pagemap();
 void vmm_load_pagemap(struct vmm_pagemap* pagemap);
 struct vmm_pagemap vmm_new_pagemap();
 void vmm_map_page(struct vmm_pagemap* pagemap, uint64_t physical, uint64_t virtual, uint64_t flags);

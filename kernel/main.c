@@ -11,6 +11,7 @@
 #include "sys/pci.h"
 #include "sys/pit.h"
 #include "sys/serial.h"
+#include "sys/smp.h"
 
 void kmain(struct stivale2_struct* info)
 {
@@ -31,6 +32,8 @@ void kmain(struct stivale2_struct* info)
     init_pit(1000);
     init_apic();
     init_pci();
+
+    smp_boot_aps();
 
     klog(LOG_INFO, "End of kmain()\n");
 

@@ -2,8 +2,6 @@
 
 #include "mm.h"
 
-struct slab* slabs = NULL;
-
 void* kalloc(size_t size)
 {
     size_t pages = size / PAGE_SIZE;

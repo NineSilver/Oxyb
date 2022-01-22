@@ -45,8 +45,30 @@ uint8_t lapic_get_id()
 
 void lapic_send_ipi(uint8_t id, uint8_t vec)
 {
-    lapic_write(LAPIC_ICR1, id << 24);
+    lapic_write(LAPIC_ICR1, (uint32_t)(id << 24));
     lapic_write(LAPIC_ICR0, vec);
+}
+
+void lapic_send_init(uint8_t id)
+{
+    lapic_write(LAPIC_ICR1, (uint32_t)(id << 24));
+    lapic_write(LAPIC_ICR0, (5 << 8));
+}
+
+void lapic_send_sipi(uint8_t id, uint64_t entry)
+{
+    lapic_write(LAPIC_ICR1, (uint32_t)(id << 24));
+    lapic_write(LAPIC_ICR0, (6 << 8) | (entry / PAGE_SIZE));
+}
+
+size_t lapic_num()
+{
+    return madt_lapic_num;
+}
+
+madt_lapic_t** lapic_vec()
+{
+    return madt_lapics;
 }
 
 static uint32_t ioapic_read(uint64_t ioapic_base, size_t reg)
@@ -138,28 +160,28 @@ void init_apic()
             case 0:
                 /* Local APIC */
                 klog(LOG_INFO, "apic: found Local APIC #%u\n", madt_lapic_num);
-                madt_lapics = krealloc(madt_lapics, (madt_lapic_num + 1) * sizeof(madt_lapic_t));
+                madt_lapics = krealloc(madt_lapics, (madt_lapic_num + 1) * sizeof(madt_lapic_t*));
                 madt_lapics[madt_lapic_num++] = (madt_lapic_t*)header;
                 break;
 
             case 1:
                 /* I/O APIC */
                 klog(LOG_INFO, "apic: found I/O APIC #%u\n", madt_ioapic_num);
-                madt_ioapics = krealloc(madt_ioapics, (madt_ioapic_num + 1) * sizeof(madt_ioapic_t));
+                madt_ioapics = krealloc(madt_ioapics, (madt_ioapic_num + 1) * sizeof(madt_ioapic_t*));
                 madt_ioapics[madt_ioapic_num++] = (madt_ioapic_t*)header;
                 break;
 
             case 2:
                 /* Interrupt Source Override */
                 klog(LOG_INFO, "apic: found ISO #%u\n", madt_iso_num);
-                madt_isos = krealloc(madt_isos, (madt_iso_num + 1) * sizeof(madt_iso_t));
+                madt_isos = krealloc(madt_isos, (madt_iso_num + 1) * sizeof(madt_iso_t*));
                 madt_isos[madt_iso_num++] = (madt_iso_t*)header;
                 break;
 
             case 4:
                 /* Non Maskable Interrupt */
                 klog(LOG_INFO, "apic: found NMI #%u\n", madt_nmi_num);
-                madt_nmis = krealloc(madt_nmis, (madt_nmi_num + 1) * sizeof(madt_nmi_t));
+                madt_nmis = krealloc(madt_nmis, (madt_nmi_num + 1) * sizeof(madt_nmi_t*));
                 madt_nmis[madt_nmi_num++] = (madt_nmi_t*)header;
                 break;
 
@@ -187,6 +209,9 @@ void init_apic()
     lapic_write(LAPIC_TIMER_REG, 32 | 0x20000);
     lapic_write(LAPIC_TIMER_DIV, 0x03);
     lapic_write(LAPIC_TIMER_INIT_COUNT, ticks_in_10ms);
+
+    lapic_write(LAPIC_ERROR_STATUS, 0x00);
+    lapic_write(LAPIC_ERROR_STATUS, 0x00);
 
     klog(LOG_INFO, "apic: now using LAPIC timer\n");
     klog(LOG_DONE, "APIC initialized succesfully\n");

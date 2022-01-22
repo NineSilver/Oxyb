@@ -3,9 +3,11 @@
 #include <stdint.h>
 
 #include <log.h>
+#include <mutex.h>
 #include <string.h>
 
 static putchar_fn_t __internal_putchar_fn = 0;
+static mutex_t klog_mutex = {0};
 
 void init_logging(putchar_fn_t log_fn)
 {
@@ -42,7 +44,7 @@ static void kprint(const char* format, va_list args)
 
                 case 'd':
                 {
-                    int32_t num = va_arg(args, int64_t);
+                    int64_t num = va_arg(args, int64_t);
                     if(num < 0)
                     {
                         num = -num;
@@ -85,6 +87,8 @@ static void kprint(const char* format, va_list args)
 
 void klog(int loglevel, const char* message, ...)
 {
+    mutex_lock(&klog_mutex);
+    
     switch(loglevel)
     {
         case LOG_INFO:
@@ -113,4 +117,6 @@ void klog(int loglevel, const char* message, ...)
     kprint(message, args);
     
     va_end(args);
+
+    mutex_unlock(&klog_mutex);
 }

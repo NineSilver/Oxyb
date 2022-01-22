@@ -146,7 +146,7 @@ static void pci_enumerate_function(uint64_t device_addr, size_t bus, uint8_t dev
     device->class = pci_function->class;
     device->prog_if = pci_function->prog_if;
 
-    pci_devices = krealloc(pci_devices, (pci_device_num + 1) * sizeof(struct pci_device));
+    pci_devices = krealloc(pci_devices, (pci_device_num + 1) * sizeof(struct pci_device*));
     pci_devices[pci_device_num++] = device;
 
     klog(LOG_INFO, "pci: found device bus %u, slot %u, function %u | class %x, subclass %x\n", bus, dev, function, device->class, device->subclass);

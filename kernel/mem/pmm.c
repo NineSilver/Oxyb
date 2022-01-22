@@ -1,10 +1,8 @@
 #include <log.h>
+#include <mutex.h>
 #include <string.h>
 
 #include "mm.h"
-
-#define ALIGN_UP(n) (((n) + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1))
-#define ALIGN_DOWN(n) ((n) & ~(PAGE_SIZE - 1))
 
 #define BIT_SET(b, i) ((b)[(i) / 8] |= (1 << ((i) % 8)))
 #define BIT_CLEAR(b, i) ((b)[(i) / 8] &= ~(1 << ((i) % 8)))
@@ -12,6 +10,8 @@
 
 static uint8_t* bitmap = 0;
 static uint64_t highest_page = 0;
+
+static mutex_t pmm_mutex = {0};
 
 void init_pmm(struct stivale2_struct_tag_memmap* memmap)
 {
@@ -80,6 +80,8 @@ static void clear_page(void* addr)
 
 void* pmm_malloc(size_t pages)
 {
+    mutex_lock(&pmm_mutex);
+
     size_t i, j;
     for(i = 0; i < highest_page / PAGE_SIZE; i++)
     {
@@ -92,10 +94,14 @@ void* pmm_malloc(size_t pages)
             else if(j == (pages - 1))
             {
                 set_pages((void*)(i * PAGE_SIZE), pages);
+
+                mutex_unlock(&pmm_mutex);
                 return (void*)(i * PAGE_SIZE);
             }
         }
     }
+
+    mutex_unlock(&pmm_mutex);
 
     return NULL;
 }
@@ -107,17 +113,12 @@ void* pmm_calloc(size_t pages)
     return new;
 }
 
-void* pmm_realloc(void* addr, size_t new_pages, size_t old_pages)
-{
-    void* new = pmm_malloc(new_pages);
-    memcpy((void*)((size_t)new + MEM_PHYS_OFFSET), (void*)((size_t)addr + MEM_PHYS_OFFSET), old_pages / PAGE_SIZE);
-    pmm_free(addr, old_pages);
-    return new;
-}
-
 void pmm_free(void* addr, size_t pages)
 {
+    mutex_lock(&pmm_mutex);
     size_t i;
     for(i = 0; i < pages; i++)
         clear_page((void*)((size_t)addr + (i * PAGE_SIZE)));
+
+    mutex_unlock(&pmm_mutex);
 }
